@@ -33,7 +33,7 @@ public class PomoTimer extends JFrame implements ActionListener {
     JButton startPauseButton = new JButton("Start");
     JButton resetButton = new JButton("Reset");
 
-    JMenu topMenu = new JMenu("Timer");
+    JMenu timerMenu = new JMenu("Timer");
     JMenu colorMenu = new JMenu("Color");
     JMenuBar menuBar = new JMenuBar();
     JMenuItem exitItem, setTimeItem, aboutItem;
@@ -109,11 +109,12 @@ public class PomoTimer extends JFrame implements ActionListener {
         colorMenu.add(orange);
         colorMenu.add(pink);
 
-        topMenu.add(setTimeItem);
-        topMenu.add(aboutItem);
-        topMenu.addSeparator();
-        topMenu.add(exitItem);
-        menuBar.add(topMenu);
+        timerMenu.add(setTimeItem);
+        timerMenu.add(aboutItem);
+        timerMenu.addSeparator();
+        timerMenu.add(exitItem);
+
+        menuBar.add(timerMenu);
         menuBar.add(colorMenu);
         this.setJMenuBar(menuBar);
     }

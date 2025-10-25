@@ -13,7 +13,12 @@ import java.awt.image.ImageObserver;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+/**
+ * JPanel that displays the timer digits
+ */
 public class PomoPanel extends JPanel {
+
+    private CountdownTimer countdownTimer;
 
     private static int IMAGE_WIDTH = 60;
     private static int IMAGE_HEIGHT = 100;
@@ -23,11 +28,11 @@ public class PomoPanel extends JPanel {
     private DigitColor digitColor = DigitColor.RED;
 
     private int h0Value = 0;
-    private int h1Value = 1;
-    private int m0Value = 2;
-    private int m1Value = 3;
-    private int s0Value = 4;
-    private int s1Value = 5;
+    private int h1Value = 0;
+    private int m0Value = 0;
+    private int m1Value = 0;
+    private int s0Value = 0;
+    private int s1Value = 0;
 
     // Images for the hour, minute, and second positions
     private ImageIcon h0;
@@ -53,6 +58,8 @@ public class PomoPanel extends JPanel {
         super();
         setPreferredSize(new Dimension(500, 120));
         updateDigits();
+
+        countdownTimer = new CountdownTimer(this);
     }
 
     @Override
@@ -67,6 +74,10 @@ public class PomoPanel extends JPanel {
         g.drawImage(s1.getImage(), S1_X, 10, IMAGE_WIDTH, IMAGE_HEIGHT, null);
     }
 
+    /**
+     * Refresh the digits to the values of the global digitColor and value variables,
+     * and repaint the panel.
+     */
     private void updateDigits() {
         h0 = new ImageIcon(this.getClass().getResource(String.format(colorPathTemplate, digitColor.name().toLowerCase(), String.valueOf(h0Value))));
         h1 = new ImageIcon(this.getClass().getResource(String.format(colorPathTemplate, digitColor.name().toLowerCase(), String.valueOf(h1Value))));
@@ -76,6 +87,15 @@ public class PomoPanel extends JPanel {
         s1 = new ImageIcon(this.getClass().getResource(String.format(colorPathTemplate, digitColor.name().toLowerCase(), String.valueOf(s1Value))));
 
         repaint();
+    }
+
+    /**
+     * Sets the time that should be reflected on the panel
+     *
+     * @param showTime time to show in seconds
+     */
+    public int setTimeToShow(final int showTime) {
+        int hoursRemaining = showTime / 3600;
     }
 
     /**
