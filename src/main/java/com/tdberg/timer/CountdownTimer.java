@@ -13,7 +13,8 @@ import java.util.TimerTask;
  * Settable countdown timer that can be started, stopped, and reset.
  */
 public class CountdownTimer {
-    private int timerSetTimeSeconds = 1500;  // Default set time is 25 minutes
+    //private int timerSetTimeSeconds = 1500;  // Default set time is 25 minutes
+    private int timerSetTimeSeconds = 5;  // Default set time is 25 minutes
     private int remainingTime = timerSetTimeSeconds;
     private PomoPanel pomoPanel;
 
@@ -42,12 +43,12 @@ public class CountdownTimer {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (remainingTime >= 0) {
-                    pomoPanel.setTimeToShow(remainingTime);
+                if (remainingTime > 0) {
                     remainingTime--;
                 } else {
                     timer.cancel();
                 }
+                pomoPanel.setTimeToShow(remainingTime);
             }
         }, 0, 1000);
     }
