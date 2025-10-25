@@ -41,11 +41,14 @@ public class PomoTimer extends JFrame implements ActionListener {
     JMenu timerMenu = new JMenu("Timer");
     JMenu colorMenu = new JMenu("Color");
     JMenu modeMenu = new JMenu("Mode");
+    JMenu alarmMenu = new JMenu("Alarm");
     JMenuBar menuBar = new JMenuBar();
     JMenuItem exitItem, setTimeItem, aboutItem;
     JRadioButtonMenuItem blue, green, orange, pink, red;
     JRadioButtonMenuItem pomoMode, timerMode;
+    JRadioButtonMenuItem classic, rooster, slotMachine, mute;
     ButtonGroup colorOptionGroup;
+    ButtonGroup alarmToneOptionGroup;
     ButtonGroup modeOptionGroup;
 
     /**
@@ -104,13 +107,35 @@ public class PomoTimer extends JFrame implements ActionListener {
         modeMenu.add(pomoMode);
         modeMenu.add(timerMode);
 
+        // Setup alarm tone options
+        classic = new JRadioButtonMenuItem("Classic");
+        rooster = new JRadioButtonMenuItem("Rooster");
+        slotMachine = new JRadioButtonMenuItem("Slot Machine");
+        mute = new JRadioButtonMenuItem("Mute");
+        classic.setSelected(true);
+
+        classic.addActionListener(this);
+        rooster.addActionListener(this);
+        slotMachine.addActionListener(this);
+        mute.addActionListener(this);
+
+        alarmToneOptionGroup = new ButtonGroup();
+        alarmToneOptionGroup.add(classic);
+        alarmToneOptionGroup.add(rooster);
+        alarmToneOptionGroup.add(slotMachine);
+        alarmToneOptionGroup.add(mute);
+
+        alarmMenu.add(classic);
+        alarmMenu.add(rooster);
+        alarmMenu.add(slotMachine);
+        alarmMenu.add(mute);
+
         // Setup color options
         blue = new JRadioButtonMenuItem("Blue");
         green = new JRadioButtonMenuItem("Green");
         orange = new JRadioButtonMenuItem("Orange");
         pink = new JRadioButtonMenuItem("Pink");
         red = new JRadioButtonMenuItem("Red");
-
         red.setSelected(true);
 
         blue.addActionListener(this);
@@ -139,6 +164,7 @@ public class PomoTimer extends JFrame implements ActionListener {
 
         menuBar.add(timerMenu);
         menuBar.add(modeMenu);
+        menuBar.add(alarmMenu);
         menuBar.add(colorMenu);
         this.setJMenuBar(menuBar);
     }
@@ -171,6 +197,14 @@ public class PomoTimer extends JFrame implements ActionListener {
             case "Reset":
                 startPauseButton.setText("Start");
                 countdownTimer.reset();
+                break;
+            case "Classic":
+                break;
+            case "Rooster":
+                break;
+            case "Slot Machine":
+                break;
+            case "Mute":
                 break;
             case "Blue":
                 digitPanel.setDigitColor(DigitColor.BLUE);
