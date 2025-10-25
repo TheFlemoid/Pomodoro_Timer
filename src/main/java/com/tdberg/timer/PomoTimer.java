@@ -7,16 +7,20 @@
 package com.tdberg.timer;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.SwingConstants;
 
 /**
  * Parent object of timer application.  Extends JFrame.
@@ -154,6 +158,7 @@ public class PomoTimer extends JFrame implements ActionListener {
             case "Set Time":
                 break;
             case "About":
+                showAboutDialog();
                 break;
             case "Start":
                 startPauseButton.setText("Pause");
@@ -194,5 +199,28 @@ public class PomoTimer extends JFrame implements ActionListener {
         }
 
         System.out.println(action);
+    }
+
+    /**
+     * Displays the 'About' dialog
+     */
+    private void showAboutDialog() {
+        final int aboutDialogWidth = 310;
+        final int aboutDialogHeight = 130;
+
+        JDialog aboutDialog = new JDialog(this, "About");
+
+        String aboutString = "<html><center>Pomodoro Timer v1.0.0" +
+                              "<br>Made by Franklyn Dahlberg in October, 2025." +
+                              "<br>GitHub: TheFlemoid" +
+                              "<br>License: MIT";
+
+        JLabel aboutLabel = new JLabel(aboutString, SwingConstants.CENTER);
+
+        aboutDialog.add(aboutLabel);
+
+        aboutDialog.setSize(aboutDialogWidth, aboutDialogHeight);
+        aboutDialog.setResizable(false);
+        aboutDialog.setVisible(true);
     }
 }
