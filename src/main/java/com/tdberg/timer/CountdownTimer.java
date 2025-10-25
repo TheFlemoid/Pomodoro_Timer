@@ -9,6 +9,9 @@ package com.tdberg.timer;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Settable countdown timer that can be started, stopped, and reset.
+ */
 public class CountdownTimer {
     private int timerSetTimeSeconds = 1500;  // Default set time is 25 minutes
     private int remainingTime = timerSetTimeSeconds;
@@ -23,8 +26,18 @@ public class CountdownTimer {
      */
     public CountdownTimer(final PomoPanel pomoPanel) {
         this.pomoPanel = pomoPanel;
+        pomoPanel.setTimeToShow(remainingTime);
+    }
 
+    /**
+     * Starts the timer
+     */
+    public void start() {
         timer = new Timer();
+
+        if (remainingTime == 0) {
+            return;
+        }
 
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -37,6 +50,31 @@ public class CountdownTimer {
                 }
             }
         }, 0, 1000);
+    }
+
+    /**
+     * Stops the timer without touching the remaining time
+     */
+    public void stop() {
+        if (timer == null) {
+            return;
+        }
+
+        timer.cancel();
+        pomoPanel.setTimeToShow(remainingTime);
+    }
+
+    /**
+     * Stops the timer and resets remaining time to the set time
+     */
+    public void reset() {
+        if (timer == null) {
+            return;
+        }
+
+        timer.cancel();
+        remainingTime = timerSetTimeSeconds;
+        pomoPanel.setTimeToShow(remainingTime);
     }
 
     /**

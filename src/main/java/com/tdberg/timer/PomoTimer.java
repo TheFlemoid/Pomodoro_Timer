@@ -29,17 +29,20 @@ public class PomoTimer extends JFrame implements ActionListener {
     BorderLayout borderLayout = new BorderLayout();
     PomoPanel digitPanel = new PomoPanel();
     JPanel buttonPanel = new JPanel();
-    CountdownTimer countDownTimer = new CountdownTimer(digitPanel);
+    CountdownTimer countdownTimer = new CountdownTimer(digitPanel);
 
     JButton startPauseButton = new JButton("Start");
     JButton resetButton = new JButton("Reset");
 
     JMenu timerMenu = new JMenu("Timer");
     JMenu colorMenu = new JMenu("Color");
+    JMenu modeMenu = new JMenu("Mode");
     JMenuBar menuBar = new JMenuBar();
     JMenuItem exitItem, setTimeItem, aboutItem;
     JRadioButtonMenuItem blue, green, orange, pink, red;
+    JRadioButtonMenuItem pomoMode, timerMode;
     ButtonGroup colorOptionGroup;
+    ButtonGroup modeOptionGroup;
 
     /**
      * Default constructor
@@ -82,6 +85,21 @@ public class PomoTimer extends JFrame implements ActionListener {
         setTimeItem.addActionListener(this);
         aboutItem.addActionListener(this);
 
+        // Setup mode options
+        pomoMode = new JRadioButtonMenuItem("Pomodoro");
+        timerMode = new JRadioButtonMenuItem("Timer");
+
+        pomoMode.addActionListener(this);
+        timerMode.addActionListener(this);
+        pomoMode.setSelected(true);
+
+        modeOptionGroup = new ButtonGroup();
+        modeOptionGroup.add(pomoMode);
+        modeOptionGroup.add(timerMode);
+
+        modeMenu.add(pomoMode);
+        modeMenu.add(timerMode);
+
         // Setup color options
         blue = new JRadioButtonMenuItem("Blue");
         green = new JRadioButtonMenuItem("Green");
@@ -116,6 +134,7 @@ public class PomoTimer extends JFrame implements ActionListener {
         timerMenu.add(exitItem);
 
         menuBar.add(timerMenu);
+        menuBar.add(modeMenu);
         menuBar.add(colorMenu);
         this.setJMenuBar(menuBar);
     }
@@ -138,10 +157,15 @@ public class PomoTimer extends JFrame implements ActionListener {
                 break;
             case "Start":
                 startPauseButton.setText("Pause");
+                countdownTimer.start();
                 break;
             case "Pause":
                 startPauseButton.setText("Start");
+                countdownTimer.stop();
+                break;
             case "Reset":
+                startPauseButton.setText("Start");
+                countdownTimer.reset();
                 break;
             case "Blue":
                 digitPanel.setDigitColor(DigitColor.BLUE);
@@ -157,6 +181,10 @@ public class PomoTimer extends JFrame implements ActionListener {
                 break;
             case "Red":
                 digitPanel.setDigitColor(DigitColor.RED);
+                break;
+            case "Pomodoro":
+                break;
+            case "Timer":
                 break;
             case "Exit":
                 System.exit(0);
