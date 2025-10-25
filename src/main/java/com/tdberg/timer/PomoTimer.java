@@ -142,14 +142,19 @@ public class PomoTimer extends JFrame implements ActionListener {
             case "Reset":
                 break;
             case "Blue":
+                digitPanel.setDigitColor(DigitColor.BLUE);
                 break;
             case "Green":
+                digitPanel.setDigitColor(DigitColor.GREEN);
                 break;
             case "Orange":
+                digitPanel.setDigitColor(DigitColor.ORANGE);
                 break;
             case "Pink":
+                digitPanel.setDigitColor(DigitColor.PINK);
                 break;
             case "Red":
+                digitPanel.setDigitColor(DigitColor.RED);
                 break;
             case "Exit":
                 System.exit(0);

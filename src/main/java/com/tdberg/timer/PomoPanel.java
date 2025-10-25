@@ -20,7 +20,14 @@ public class PomoPanel extends JPanel {
     private static int MINOR_SEP = 10;
     private static int MAJOR_SEP = 50;
 
-    private Color digitColor = Color.RED;
+    private DigitColor digitColor = DigitColor.RED;
+
+    private int h0Value = 0;
+    private int h1Value = 1;
+    private int m0Value = 2;
+    private int m1Value = 3;
+    private int s0Value = 4;
+    private int s1Value = 5;
 
     // Images for the hour, minute, and second positions
     private ImageIcon h0;
@@ -44,15 +51,8 @@ public class PomoPanel extends JPanel {
      */    
     public PomoPanel() {
         super();
-
-        h0 = new ImageIcon(this.getClass().getResource(String.format(colorPathTemplate, "red", "0")));
-        h1 = new ImageIcon(this.getClass().getResource(String.format(colorPathTemplate, "red", "0")));
-        m0 = new ImageIcon(this.getClass().getResource(String.format(colorPathTemplate, "red", "0")));
-        m1 = new ImageIcon(this.getClass().getResource(String.format(colorPathTemplate, "red", "0")));
-        s0 = new ImageIcon(this.getClass().getResource(String.format(colorPathTemplate, "red", "0")));
-        s1 = new ImageIcon(this.getClass().getResource(String.format(colorPathTemplate, "red", "0")));
-
         setPreferredSize(new Dimension(500, 120));
+        updateDigits();
     }
 
     @Override
@@ -67,21 +67,33 @@ public class PomoPanel extends JPanel {
         g.drawImage(s1.getImage(), S1_X, 10, IMAGE_WIDTH, IMAGE_HEIGHT, null);
     }
 
+    private void updateDigits() {
+        h0 = new ImageIcon(this.getClass().getResource(String.format(colorPathTemplate, digitColor.name().toLowerCase(), String.valueOf(h0Value))));
+        h1 = new ImageIcon(this.getClass().getResource(String.format(colorPathTemplate, digitColor.name().toLowerCase(), String.valueOf(h1Value))));
+        m0 = new ImageIcon(this.getClass().getResource(String.format(colorPathTemplate, digitColor.name().toLowerCase(), String.valueOf(m0Value))));
+        m1 = new ImageIcon(this.getClass().getResource(String.format(colorPathTemplate, digitColor.name().toLowerCase(), String.valueOf(m1Value))));
+        s0 = new ImageIcon(this.getClass().getResource(String.format(colorPathTemplate, digitColor.name().toLowerCase(), String.valueOf(s0Value))));
+        s1 = new ImageIcon(this.getClass().getResource(String.format(colorPathTemplate, digitColor.name().toLowerCase(), String.valueOf(s1Value))));
+
+        repaint();
+    }
+
     /**
      * Returns the current digit color
      *
      * @return the current digit color
      */
-    public Color getDigitColor() {
+    public DigitColor getDigitColor() {
         return digitColor;
     }
 
     /**
      * Sets the digit color to the param value
      *
-     * @param Color to set
+     * @param color DigitColor to set
      */
-    public void setDigitColor(final Color color) {
+    public void setDigitColor(final DigitColor color) {
         digitColor = color;
+        updateDigits();
     }
 }
