@@ -12,17 +12,17 @@ import java.util.TimerTask;
 public class CountdownTimer {
     private int timerSetTimeSeconds = 1500;  // Default set time is 25 minutes
     private int remainingTime = timerSetTimeSeconds;
-    private PomoPanel parent;
+    private PomoPanel pomoPanel;
 
     private Timer timer;
 
     /**
      * Default constructor
      *
-     * @param parent PomoPanel parent of this timer that should reflect the time
+     * @param pomoPanel PomoPanel pomoPanel of this timer that should reflect the time
      */
-    public CountdownTimer(final PomoPanel parent) {
-        this.parent = parent;
+    public CountdownTimer(final PomoPanel pomoPanel) {
+        this.pomoPanel = pomoPanel;
 
         timer = new Timer();
 
@@ -30,7 +30,7 @@ public class CountdownTimer {
             @Override
             public void run() {
                 if (remainingTime >= 0) {
-                    System.out.println(String.valueOf(remainingTime));
+                    pomoPanel.setTimeToShow(remainingTime);
                     remainingTime--;
                 } else {
                     timer.cancel();

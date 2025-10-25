@@ -29,6 +29,7 @@ public class PomoTimer extends JFrame implements ActionListener {
     BorderLayout borderLayout = new BorderLayout();
     PomoPanel digitPanel = new PomoPanel();
     JPanel buttonPanel = new JPanel();
+    CountdownTimer countDownTimer = new CountdownTimer(digitPanel);
 
     JButton startPauseButton = new JButton("Start");
     JButton resetButton = new JButton("Reset");
