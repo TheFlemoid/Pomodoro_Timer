@@ -35,6 +35,8 @@ public class PomoTimer extends JFrame implements ActionListener {
     JPanel buttonPanel = new JPanel();
     CountdownTimer countdownTimer = new CountdownTimer(digitPanel);
 
+    AlarmTone activeAlarm = AlarmTone.CLASSIC;
+
     JButton startPauseButton = new JButton("Start");
     JButton resetButton = new JButton("Reset");
 
@@ -199,12 +201,16 @@ public class PomoTimer extends JFrame implements ActionListener {
                 countdownTimer.reset();
                 break;
             case "Classic":
+                activeAlarm = AlarmTone.CLASSIC;
                 break;
             case "Rooster":
+                activeAlarm = AlarmTone.ROOSTER;
                 break;
             case "Slot Machine":
+                activeAlarm = AlarmTone.SLOT_MACHINE;
                 break;
             case "Mute":
+                activeAlarm = AlarmTone.MUTE;
                 break;
             case "Blue":
                 digitPanel.setDigitColor(DigitColor.BLUE);
@@ -233,6 +239,15 @@ public class PomoTimer extends JFrame implements ActionListener {
         }
 
         System.out.println(action);
+    }
+
+    /**
+     * Plays the activeAlarm tone
+     */
+    public void playAlarm() {
+        if (activeAlarm == AlarmTone.MUTE) {
+            return;
+        } 
     }
 
     /**
