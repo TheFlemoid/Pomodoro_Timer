@@ -33,9 +33,8 @@ public class PomoTimer extends JFrame implements ActionListener {
     BorderLayout borderLayout = new BorderLayout();
     PomoPanel digitPanel = new PomoPanel();
     JPanel buttonPanel = new JPanel();
-    CountdownTimer countdownTimer = new CountdownTimer(digitPanel);
-
-    AlarmTone activeAlarm = AlarmTone.CLASSIC;
+    CountdownTimer countdownTimer = new CountdownTimer(this);
+    AlarmPlayer alarmPlayer = new AlarmPlayer();
 
     JButton startPauseButton = new JButton("Start");
     JButton resetButton = new JButton("Reset");
@@ -68,8 +67,6 @@ public class PomoTimer extends JFrame implements ActionListener {
         initializeFrameElements();
 
         this.setVisible(true);
-
-        digitPanel.repaint();
     }
 
     /**
@@ -201,16 +198,16 @@ public class PomoTimer extends JFrame implements ActionListener {
                 countdownTimer.reset();
                 break;
             case "Classic":
-                activeAlarm = AlarmTone.CLASSIC;
+                alarmPlayer.setActiveAlarm(AlarmTone.CLASSIC);
                 break;
             case "Rooster":
-                activeAlarm = AlarmTone.ROOSTER;
+                alarmPlayer.setActiveAlarm(AlarmTone.ROOSTER);
                 break;
             case "Slot Machine":
-                activeAlarm = AlarmTone.SLOT_MACHINE;
+                alarmPlayer.setActiveAlarm(AlarmTone.SLOT_MACHINE);
                 break;
             case "Mute":
-                activeAlarm = AlarmTone.MUTE;
+                alarmPlayer.setActiveAlarm(AlarmTone.MUTE);
                 break;
             case "Blue":
                 digitPanel.setDigitColor(DigitColor.BLUE);
@@ -241,13 +238,13 @@ public class PomoTimer extends JFrame implements ActionListener {
         System.out.println(action);
     }
 
-    /**
-     * Plays the activeAlarm tone
-     */
-    public void playAlarm() {
-        if (activeAlarm == AlarmTone.MUTE) {
-            return;
-        } 
+    public void timerFinished() {
+        if (alarmPlayer.getActiveAlarm() != AlarmTone.MUTE) {
+            alarmPlayer.playAlarm();
+        }
+
+        startPauseButton.setText("Start");
+        countdownTimer.reset();
     }
 
     /**
@@ -271,5 +268,9 @@ public class PomoTimer extends JFrame implements ActionListener {
         aboutDialog.setSize(aboutDialogWidth, aboutDialogHeight);
         aboutDialog.setResizable(false);
         aboutDialog.setVisible(true);
+    }
+
+    public PomoPanel getDigitPanel() {
+        return digitPanel;
     }
 }

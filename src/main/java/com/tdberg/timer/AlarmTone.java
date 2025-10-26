@@ -10,9 +10,9 @@ package com.tdberg.timer;
  * Enumeration of all available alarm tones
  */
 public enum AlarmTone {
-    CLASSIC("sfx/classic.wav"),
-    ROOSTER("sfx/rooster.wav"),
-    SLOT_MACHINE("sfx/slot_machine.wav"),
+    CLASSIC("/sfx/classic.wav"),
+    ROOSTER("/sfx/rooster.wav"),
+    SLOT_MACHINE("/sfx/slot_machine.wav"),
     MUTE("");
 
     private String filepath;

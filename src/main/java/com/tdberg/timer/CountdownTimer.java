@@ -16,18 +16,18 @@ public class CountdownTimer {
     //private int timerSetTimeSeconds = 1500;  // Default set time is 25 minutes
     private int timerSetTimeSeconds = 5;  // Default set time is 25 minutes
     private int remainingTime = timerSetTimeSeconds;
-    private PomoPanel pomoPanel;
+    private PomoTimer pomoTimer;
 
     private Timer timer;
 
     /**
      * Default constructor
      *
-     * @param pomoPanel PomoPanel pomoPanel of this timer that should reflect the time
+     * @param pomoTimer PomoPanel parent of this timer
      */
-    public CountdownTimer(final PomoPanel pomoPanel) {
-        this.pomoPanel = pomoPanel;
-        pomoPanel.setTimeToShow(remainingTime);
+    public CountdownTimer(final PomoTimer pomoTimer) {
+        this.pomoTimer = pomoTimer;
+        pomoTimer.getDigitPanel().setTimeToShow(remainingTime);
     }
 
     /**
@@ -47,8 +47,9 @@ public class CountdownTimer {
                     remainingTime--;
                 } else {
                     timer.cancel();
+                    pomoTimer.timerFinished();
                 }
-                pomoPanel.setTimeToShow(remainingTime);
+                pomoTimer.getDigitPanel().setTimeToShow(remainingTime);
             }
         }, 0, 1000);
     }
@@ -62,7 +63,7 @@ public class CountdownTimer {
         }
 
         timer.cancel();
-        pomoPanel.setTimeToShow(remainingTime);
+        pomoTimer.getDigitPanel().setTimeToShow(remainingTime);
     }
 
     /**
@@ -75,7 +76,7 @@ public class CountdownTimer {
 
         timer.cancel();
         remainingTime = timerSetTimeSeconds;
-        pomoPanel.setTimeToShow(remainingTime);
+        pomoTimer.getDigitPanel().setTimeToShow(remainingTime);
     }
 
     /**
