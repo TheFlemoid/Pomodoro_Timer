@@ -6,11 +6,11 @@
  */ 
 package com.tdberg.timer;
 
-import java.io.File;
+import org.freedesktop.gstreamer.Gst;
+import org.freedesktop.gstreamer.Pipeline;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URISyntaxException;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -18,12 +18,12 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
- * Minimal audio player to play alarm tones
+ * Minimal audio player to play alarm tones.
+ * NOTE: Currently having big problems getting Java to play out of bluetooth devices,
+ *       probably need to replace this with gstreamer.
  */
 public class AlarmPlayer {
     AlarmTone activeAlarm = AlarmTone.CLASSIC;
-    Clip audioClip;
-    AudioInputStream audioInputStream;
 
     public AlarmPlayer() {
         setActiveAlarm(AlarmTone.CLASSIC);
@@ -34,8 +34,26 @@ public class AlarmPlayer {
             return;
         }
 
-        audioClip.setMicrosecondPosition(0);
-        audioClip.start();
+        Thread alarmThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                InputStream inputStream = getClass().getResourceAsStream(activeAlarm.getFilePath());
+
+                try {
+                    AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(inputStream);
+                    Clip audioClip = AudioSystem.getClip();
+                    audioClip.open(audioInputStream);
+                    audioClip.setMicrosecondPosition(0);
+                    audioClip.start();
+                    Thread.sleep(6000); // Clip start is non-blocking for some silly reason
+                    audioClip.close();
+                }catch (UnsupportedAudioFileException | LineUnavailableException |
+                        IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        alarmThread.start();
     }
 
     /**
@@ -52,25 +70,6 @@ public class AlarmPlayer {
      */
     public void setActiveAlarm(final AlarmTone activeAlarm) {
         this.activeAlarm = activeAlarm;
-
-        if (this.activeAlarm == AlarmTone.MUTE) {
-            return;
-        }
-
-        if (audioClip != null) {
-            audioClip.stop();
-            audioClip.close();
-        }
-
-        InputStream inputStream = getClass().getResourceAsStream(activeAlarm.getFilePath());
-
-        try {
-            audioInputStream = AudioSystem.getAudioInputStream(inputStream);
-            audioClip = AudioSystem.getClip();
-            audioClip.open(audioInputStream);
-        }catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
-            e.printStackTrace();
-        }
     }
 }
 
