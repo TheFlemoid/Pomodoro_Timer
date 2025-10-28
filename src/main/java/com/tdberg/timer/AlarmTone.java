@@ -10,15 +10,26 @@ package com.tdberg.timer;
  * Enumeration of all available alarm tones
  */
 public enum AlarmTone {
-    CLASSIC("/sfx/classic.wav"),
-    ROOSTER("/sfx/rooster.wav"),
-    SLOT_MACHINE("/sfx/slot_machine.wav"),
-    MUTE("");
+    CLASSIC("/sfx/classic.wav", "classic.wav"),
+    ROOSTER("/sfx/rooster.wav", "rooster.wav"),
+    SLOT_MACHINE("/sfx/slot_machine.wav", "slot_machine.wav"),
+    MUTE("", "");
 
     private String filepath;
+    private String filename;
 
-    AlarmTone(String filepath) {
+    AlarmTone(String filepath, String filename) {
         this.filepath = filepath;
+        this.filename = filename;
+    }
+
+    /**
+     * Returns this enums filename.
+     *
+     * @return the filename as a String
+     */
+    public String getFilename() {
+        return filename;
     }
 
     /**
