@@ -6,6 +6,8 @@
  */ 
 package com.tdberg.timer;
 
+import com.tdberg.timer.dialogs.SetTimerDialog;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -38,6 +40,8 @@ public class PomoTimer extends JFrame implements ActionListener {
     private TimerType timerType = TimerType.POMO;
     private boolean onBreak = false;
 
+    SetTimerDialog setTimerDialog;
+
     BorderLayout borderLayout = new BorderLayout();
     PomoPanel digitPanel = new PomoPanel();
     JPanel buttonPanel = new JPanel();
@@ -49,8 +53,6 @@ public class PomoTimer extends JFrame implements ActionListener {
     JButton setVolumeButton = new JButton("Set");
     JDialog setVolumeDialog;
     JSlider volumeSlider;
-
-    JDialog setTimerDialog;
 
     JMenu timerMenu = new JMenu("Timer");
     JMenu colorMenu = new JMenu("Color");
@@ -201,7 +203,9 @@ public class PomoTimer extends JFrame implements ActionListener {
 
         switch(action) {
             case "Set Time":
-                showSetTimerDialog();
+                //showSetTimerDialog();
+                setTimerDialog = new SetTimerDialog(this);
+                setTimerDialog.setVisible(true);
                 break;
             case "About":
                 showAboutDialog();
@@ -224,6 +228,9 @@ public class PomoTimer extends JFrame implements ActionListener {
             case "Rooster":
                 alarmPlayer.setActiveAlarm(AlarmTone.ROOSTER);
                 break;
+            case "Mute":
+                alarmPlayer.setActiveAlarm(AlarmTone.MUTE);
+                break;
             case "Slot Machine":
                 alarmPlayer.setActiveAlarm(AlarmTone.SLOT_MACHINE);
                 break;
@@ -234,9 +241,6 @@ public class PomoTimer extends JFrame implements ActionListener {
                 float setValue = volumeSlider.getValue() / 100f;
                 alarmPlayer.setVolume(setValue);
                 setVolumeDialog.hide();
-                break;
-            case "Mute":
-                alarmPlayer.setActiveAlarm(AlarmTone.MUTE);
                 break;
             case "Blue":
                 digitPanel.setDigitColor(DigitColor.BLUE);
@@ -299,21 +303,20 @@ public class PomoTimer extends JFrame implements ActionListener {
 
         startPauseButton.setText("Start");
         countdownTimer.reset();
-
     }
 
     /**
      * Displays the 'About' dialog
      */
     private void showAboutDialog() {
-        final int aboutDialogWidth = 310;
-        final int aboutDialogHeight = 130;
+        final int aboutDialogWidth = 340;
+        final int aboutDialogHeight = 135;
 
         JDialog aboutDialog = new JDialog(this, "About");
         aboutDialog.setLocationRelativeTo(null);
 
-        String aboutString = "<html><center>Pomodoro Timer v1.0.0" +
-                              "<br>Made by Franklyn Dahlberg in October, 2025." +
+        String aboutString = "<html><b><center><u>Pomodoro Timer v1.0.0</u>" +
+                              "<br>Made By: Franklyn Dahlberg in October, 2025." +
                               "<br>GitHub: TheFlemoid" +
                               "<br>License: MIT";
 
@@ -327,8 +330,7 @@ public class PomoTimer extends JFrame implements ActionListener {
     }
 
     /**
-     * Shows the "Set Volume" dialog to control the volume of the
-     * alarm tone
+     * Shows the "Set Volume" dialog to control the volume of the alarm tone.
      */
     private void showVolumeDialog() {
         final int volumeDialogWidth = 310;
@@ -338,12 +340,14 @@ public class PomoTimer extends JFrame implements ActionListener {
         setVolumeDialog.setLocationRelativeTo(null);
         setVolumeDialog.setLayout(borderLayout);
 
-        // Volume is stored in the alarm player as a float, as Gstreamer needs this for the volume
-        // plugin, but we'd like to show it as a % to the user.  Hence the conversion here.
+        // Volume is stored in the alarm player as a float, as Gstreamer needs
+        // this for the volume plugin, but we'd like to show it as a % to the
+        // user.  Hence the conversion here.
         float currentVolume = alarmPlayer.getVolume() * 100;
         int volumeInt = Math.round(currentVolume);
 
-        volumeSlider = new JSlider(JSlider.HORIZONTAL, MIN_VOL, MAX_VOL, volumeInt);
+        volumeSlider = new JSlider(JSlider.HORIZONTAL, MIN_VOL, MAX_VOL,
+                                   volumeInt);
         volumeSlider.setMajorTickSpacing(10);
         volumeSlider.setPaintTicks(true);
         volumeSlider.setPaintLabels(true);
@@ -356,23 +360,23 @@ public class PomoTimer extends JFrame implements ActionListener {
         setVolumeDialog.setVisible(true);
     }
 
-    private void showSetTimerDialog() {
-        final int setTimerDialogWidth = 440;
-        final int setTimerDialogHeight = 500;
+    //private void showSetTimerDialog() {
+    //    final int setTimerDialogWidth = 440;
+    //    final int setTimerDialogHeight = 500;
 
-        setTimerDialog = new JDialog(this, "Set Timer");
-        setTimerDialog.setLocationRelativeTo(null);
-        setTimerDialog.setLayout(new GridLayout(2, 4));
-        
-        JLabel timerTimeLabel = new JLabel("<html><u><h3>Work / Timer Time:");
-        JLabel breakTimeLabel = new JLabel("<html><u><h3>Break Time:");
-        setTimerDialog.add(timerTimeLabel);
-        setTimerDialog.add(breakTimeLabel);
+    //    setTimerDialog = new JDialog(this, "Set Timer");
+    //    setTimerDialog.setLocationRelativeTo(null);
+    //    setTimerDialog.setLayout(new GridLayout(2, 4));
+    //
+    //    JLabel timerTimeLabel = new JLabel("<html><u><h3>Work / Timer Time:");
+    //    JLabel breakTimeLabel = new JLabel("<html><u><h3>Break Time:");
+    //    setTimerDialog.add(timerTimeLabel);
+    //    setTimerDialog.add(breakTimeLabel);
 
-        setTimerDialog.setSize(setTimerDialogWidth, setTimerDialogHeight);
-        setTimerDialog.setResizable(false);
-        setTimerDialog.setVisible(true);
-    }
+    //    setTimerDialog.setSize(setTimerDialogWidth, setTimerDialogHeight);
+    //    setTimerDialog.setResizable(false);
+    //    setTimerDialog.setVisible(true);
+    //}
 
     /**
      * Returns the digit JPanel for this runtime
