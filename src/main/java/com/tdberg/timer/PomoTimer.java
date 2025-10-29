@@ -50,6 +50,8 @@ public class PomoTimer extends JFrame implements ActionListener {
     JDialog setVolumeDialog;
     JSlider volumeSlider;
 
+    JDialog setTimerDialog;
+
     JMenu timerMenu = new JMenu("Timer");
     JMenu colorMenu = new JMenu("Color");
     JMenu modeMenu = new JMenu("Mode");
@@ -199,6 +201,7 @@ public class PomoTimer extends JFrame implements ActionListener {
 
         switch(action) {
             case "Set Time":
+                showSetTimerDialog();
                 break;
             case "About":
                 showAboutDialog();
@@ -351,6 +354,24 @@ public class PomoTimer extends JFrame implements ActionListener {
         setVolumeDialog.setSize(volumeDialogWidth, volumeDialogHeight);
         setVolumeDialog.setResizable(false);
         setVolumeDialog.setVisible(true);
+    }
+
+    private void showSetTimerDialog() {
+        final int setTimerDialogWidth = 440;
+        final int setTimerDialogHeight = 500;
+
+        setTimerDialog = new JDialog(this, "Set Timer");
+        setTimerDialog.setLocationRelativeTo(null);
+        setTimerDialog.setLayout(new GridLayout(2, 4));
+        
+        JLabel timerTimeLabel = new JLabel("<html><u><h3>Work / Timer Time:");
+        JLabel breakTimeLabel = new JLabel("<html><u><h3>Break Time:");
+        setTimerDialog.add(timerTimeLabel);
+        setTimerDialog.add(breakTimeLabel);
+
+        setTimerDialog.setSize(setTimerDialogWidth, setTimerDialogHeight);
+        setTimerDialog.setResizable(false);
+        setTimerDialog.setVisible(true);
     }
 
     /**
