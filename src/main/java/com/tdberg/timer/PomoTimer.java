@@ -46,7 +46,7 @@ public class PomoTimer extends JFrame implements ActionListener {
     SetTimerDialog setTimerDialog;
 
     BorderLayout borderLayout = new BorderLayout();
-    PomoPanel digitPanel = new PomoPanel();
+    DigitPanel digitPanel = new DigitPanel();
     JPanel buttonPanel = new JPanel();
     CountdownTimer countdownTimer = new CountdownTimer(this);
     AlarmPlayer alarmPlayer = new AlarmPlayer();
@@ -365,7 +365,7 @@ public class PomoTimer extends JFrame implements ActionListener {
     /**
      * Returns the digit JPanel for this runtime
      */
-    public PomoPanel getDigitPanel() {
+    public DigitPanel getDigitPanel() {
         return digitPanel;
     }
 }
