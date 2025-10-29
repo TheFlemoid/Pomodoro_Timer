@@ -8,6 +8,7 @@ repositories {
 
 dependencies {
     implementation group: 'com.formdev', name: 'flatlaf', version: '3.6.2'
+    implementation group: 'org.freedesktop.gstreamer', name: 'gst1-java-core', version: '1.4.0'
     testImplementation libs.junit
 }
 

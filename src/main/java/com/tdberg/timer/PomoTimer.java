@@ -6,10 +6,20 @@
  */ 
 package com.tdberg.timer;
 
+import com.tdberg.timer.alarm.AlarmPlayer;
+import com.tdberg.timer.dialogs.AboutDialog;
+import com.tdberg.timer.dialogs.SetTimerDialog;
+import com.tdberg.timer.dialogs.SetVolumeDialog;
+import com.tdberg.timer.enums.AlarmTone;
+import com.tdberg.timer.enums.DigitColor;
+import com.tdberg.timer.enums.TimerType;
+
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -23,22 +33,39 @@ import javax.swing.JRadioButtonMenuItem;
  */
 public class PomoTimer extends JFrame implements ActionListener {
 
-    private static int FRAME_WIDTH = 510;
-    private static int FRAME_HEIGHT = 220;
+    private static final int FRAME_WIDTH = 510;
+    private static final int FRAME_HEIGHT = 220;
+
+    private int workTimeSeconds = 1500;
+    private int breakTimeSeconds = 300;
+    private TimerType timerType = TimerType.POMO;
+    private boolean onBreak = false;
+
+    SetTimerDialog setTimerDialog;
+    SetVolumeDialog setVolumeDialog;
+    AboutDialog aboutDialog;
 
     BorderLayout borderLayout = new BorderLayout();
-    PomoPanel digitPanel = new PomoPanel();
+    DigitPanel digitPanel = new DigitPanel();
     JPanel buttonPanel = new JPanel();
+    CountdownTimer countdownTimer = new CountdownTimer(this);
+    AlarmPlayer alarmPlayer = new AlarmPlayer();
 
     JButton startPauseButton = new JButton("Start");
     JButton resetButton = new JButton("Reset");
 
-    JMenu topMenu = new JMenu("Timer");
+    JMenu timerMenu = new JMenu("Timer");
     JMenu colorMenu = new JMenu("Color");
+    JMenu modeMenu = new JMenu("Mode");
+    JMenu alarmMenu = new JMenu("Alarm");
     JMenuBar menuBar = new JMenuBar();
-    JMenuItem exitItem, setTimeItem, aboutItem;
+    JMenuItem exitItem, setTimeItem, aboutItem, setVolumeItem;
     JRadioButtonMenuItem blue, green, orange, pink, red;
+    JRadioButtonMenuItem pomoMode, timerMode;
+    JRadioButtonMenuItem classic, rooster, slotMachine, mute;
     ButtonGroup colorOptionGroup;
+    ButtonGroup alarmToneOptionGroup;
+    ButtonGroup modeOptionGroup;
 
     /**
      * Default constructor
@@ -52,11 +79,16 @@ public class PomoTimer extends JFrame implements ActionListener {
         this.setResizable(false);
         this.setLayout(borderLayout);
 
+        URL iconUrl = getClass().getResource("/timer_icon.png");
+        if (iconUrl != null) {
+            ImageIcon icon = new ImageIcon(iconUrl);
+            this.setIconImage(icon.getImage());
+        }
+
         initializeFrameElements();
+        countdownTimer.setTimerSetTime(workTimeSeconds);
 
         this.setVisible(true);
-
-        digitPanel.repaint();
     }
 
     /**
@@ -77,9 +109,51 @@ public class PomoTimer extends JFrame implements ActionListener {
         exitItem = new JMenuItem("Exit");
         setTimeItem = new JMenuItem("Set Time");
         aboutItem = new JMenuItem("About");
+        setVolumeItem = new JMenuItem("Set Volume");
         exitItem.addActionListener(this);
         setTimeItem.addActionListener(this);
         aboutItem.addActionListener(this);
+        setVolumeItem.addActionListener(this);
+
+        // Setup mode options
+        pomoMode = new JRadioButtonMenuItem("Pomodoro");
+        timerMode = new JRadioButtonMenuItem("Timer");
+
+        pomoMode.addActionListener(this);
+        timerMode.addActionListener(this);
+        pomoMode.setSelected(true);
+
+        modeOptionGroup = new ButtonGroup();
+        modeOptionGroup.add(pomoMode);
+        modeOptionGroup.add(timerMode);
+
+        modeMenu.add(pomoMode);
+        modeMenu.add(timerMode);
+
+        // Setup alarm tone options
+        classic = new JRadioButtonMenuItem("Classic");
+        rooster = new JRadioButtonMenuItem("Rooster");
+        slotMachine = new JRadioButtonMenuItem("Slot Machine");
+        mute = new JRadioButtonMenuItem("Mute");
+        classic.setSelected(true);
+
+        classic.addActionListener(this);
+        rooster.addActionListener(this);
+        slotMachine.addActionListener(this);
+        mute.addActionListener(this);
+
+        alarmToneOptionGroup = new ButtonGroup();
+        alarmToneOptionGroup.add(classic);
+        alarmToneOptionGroup.add(rooster);
+        alarmToneOptionGroup.add(slotMachine);
+        alarmToneOptionGroup.add(mute);
+
+        alarmMenu.add(classic);
+        alarmMenu.add(rooster);
+        alarmMenu.add(slotMachine);
+        alarmMenu.add(mute);
+        alarmMenu.addSeparator();
+        alarmMenu.add(setVolumeItem);
 
         // Setup color options
         blue = new JRadioButtonMenuItem("Blue");
@@ -87,8 +161,7 @@ public class PomoTimer extends JFrame implements ActionListener {
         orange = new JRadioButtonMenuItem("Orange");
         pink = new JRadioButtonMenuItem("Pink");
         red = new JRadioButtonMenuItem("Red");
-
-        red.setSelected(true);
+        green.setSelected(true);
 
         blue.addActionListener(this);
         green.addActionListener(this);
@@ -109,11 +182,14 @@ public class PomoTimer extends JFrame implements ActionListener {
         colorMenu.add(orange);
         colorMenu.add(pink);
 
-        topMenu.add(setTimeItem);
-        topMenu.add(aboutItem);
-        topMenu.addSeparator();
-        topMenu.add(exitItem);
-        menuBar.add(topMenu);
+        timerMenu.add(setTimeItem);
+        timerMenu.add(aboutItem);
+        timerMenu.addSeparator();
+        timerMenu.add(exitItem);
+
+        menuBar.add(timerMenu);
+        menuBar.add(modeMenu);
+        menuBar.add(alarmMenu);
         menuBar.add(colorMenu);
         this.setJMenuBar(menuBar);
     }
@@ -131,25 +207,67 @@ public class PomoTimer extends JFrame implements ActionListener {
 
         switch(action) {
             case "Set Time":
+                setTimerDialog = new SetTimerDialog(this, workTimeSeconds, breakTimeSeconds);
+                setTimerDialog.setVisible(true);
                 break;
             case "About":
+                aboutDialog = new AboutDialog(this);
                 break;
             case "Start":
                 startPauseButton.setText("Pause");
+                countdownTimer.start();
                 break;
             case "Pause":
                 startPauseButton.setText("Start");
+                countdownTimer.stop();
+                break;
             case "Reset":
+                startPauseButton.setText("Start");
+                countdownTimer.reset();
+                break;
+            case "Classic":
+                alarmPlayer.setActiveAlarm(AlarmTone.CLASSIC);
+                break;
+            case "Rooster":
+                alarmPlayer.setActiveAlarm(AlarmTone.ROOSTER);
+                break;
+            case "Mute":
+                alarmPlayer.setActiveAlarm(AlarmTone.MUTE);
+                break;
+            case "Slot Machine":
+                alarmPlayer.setActiveAlarm(AlarmTone.SLOT_MACHINE);
+                break;
+            case "Set Volume":
+                setVolumeDialog = new SetVolumeDialog(this, alarmPlayer);
                 break;
             case "Blue":
+                digitPanel.setDigitColor(DigitColor.BLUE);
                 break;
             case "Green":
+                digitPanel.setDigitColor(DigitColor.GREEN);
                 break;
             case "Orange":
+                digitPanel.setDigitColor(DigitColor.ORANGE);
                 break;
             case "Pink":
+                digitPanel.setDigitColor(DigitColor.PINK);
                 break;
             case "Red":
+                digitPanel.setDigitColor(DigitColor.RED);
+                break;
+            case "Pomodoro":
+                timerType = TimerType.POMO;
+                countdownTimer.stop();
+                countdownTimer.setTimerSetTime(workTimeSeconds);
+                countdownTimer.reset();
+                startPauseButton.setText("Start");
+                break;
+            case "Timer":
+                timerType = TimerType.TIMER;
+                countdownTimer.stop();
+                countdownTimer.setTimerSetTime(workTimeSeconds);
+                countdownTimer.reset();
+                startPauseButton.setText("Start");
                 break;
             case "Exit":
                 System.exit(0);
@@ -157,7 +275,61 @@ public class PomoTimer extends JFrame implements ActionListener {
             default:
                 break;
         }
+    }
 
-        System.out.println(action);
+    /**
+     * Called when the timer completes it's countdown to zero
+     */
+    public void timerFinished() {
+        if (alarmPlayer.getActiveAlarm() != AlarmTone.MUTE) {
+            alarmPlayer.playAlarm();
+        }
+
+        if (timerType == TimerType.POMO) {
+            if (!onBreak) {
+                onBreak = true;
+                countdownTimer.setTimerSetTime(breakTimeSeconds);
+            } else {
+                onBreak = false;
+                countdownTimer.setTimerSetTime(workTimeSeconds);
+            }
+        }else {
+            countdownTimer.setTimerSetTime(workTimeSeconds);
+        }
+
+        startPauseButton.setText("Start");
+        countdownTimer.reset();
+    }
+
+    /**
+     * Returns the digit JPanel for this runtime
+     */
+    public DigitPanel getDigitPanel() {
+        return digitPanel;
+    }
+
+    /**
+     * Sets the 'work time' timer value and resets the timer
+     *
+     * @param workTimeSeconds time to set for 'work time' in seconds
+     */
+    public void setWorkTimeSeconds(final int workTimeSeconds) {
+        this.workTimeSeconds = workTimeSeconds;
+        countdownTimer.stop();
+        countdownTimer.setTimerSetTime(workTimeSeconds);
+        countdownTimer.reset();
+        startPauseButton.setText("Start");
+    }
+
+    /**
+     * Sets the 'break time' timer value and resets the timer
+     *
+     * @param breakTimeSeconds time to set for 'break time' in seconds
+     */
+    public void setBreakTimeSeconds(final int breakTimeSeconds) {
+        this.breakTimeSeconds = breakTimeSeconds;
+        countdownTimer.stop();
+        countdownTimer.reset();
+        startPauseButton.setText("Start");
     }
 }
