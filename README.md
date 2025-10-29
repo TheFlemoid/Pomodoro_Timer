@@ -13,7 +13,9 @@ Now on to the features!  This is a Pomodoro timer for work productivity, implmen
 
 It also comes with a snazzy dark UI!
 
-![cool_looking_interface.png](resources/front_interface.png)
+<p align="center">
+    <img src="resources/front_interface.png" />
+</p>
 
 ---
 
