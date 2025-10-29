@@ -39,13 +39,35 @@ public class SetTimerDialog extends JDialog {
     JLabel minutesLabel = new JLabel("Minutes:");
     JLabel secondsLabel = new JLabel("Seconds:");
 
+    final int workTimerSeconds;
+    final int breakTimerSeconds;
+
+    final int initWorkTimerHours;
+    final int initWorkTimerMinutes;
+    final int initWorkTimerSeconds;
+    final int initBreakTimerHours;
+    final int initBreakTimerMinutes;
+    final int initBreakTimerSeconds;
+
     /**
      * Default constructor
      *
      * @param owner JFrame owner of this dialog
      */
-    public SetTimerDialog(final JFrame owner) {
+    public SetTimerDialog(final JFrame owner, final int workTimerSeconds,
+                          final int breakTimerSeconds) {
+
         super(owner, "Set Timer", true);
+        this.workTimerSeconds = workTimerSeconds;
+        this.breakTimerSeconds = breakTimerSeconds;
+
+        initWorkTimerSeconds = workTimerSeconds % 60;
+        initWorkTimerMinutes = (workTimerSeconds / 60) % 60;
+        initWorkTimerHours = workTimerSeconds / 3600;
+        initBreakTimerSeconds = breakTimerSeconds % 60;
+        initBreakTimerMinutes = (breakTimerSeconds / 60) % 60;
+        initBreakTimerHours = breakTimerSeconds / 3600;
+
         initializeUI();
         setResizable(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -96,9 +118,9 @@ public class SetTimerDialog extends JDialog {
         minutesLabel = new JLabel("Minutes:");
         secondsLabel = new JLabel("Seconds:");
 
-        workHoursTextField = new JTextField(3);
-        workMinutesTextField = new JTextField(3);
-        workSecondsTextField = new JTextField(3);
+        workHoursTextField = new JTextField(String.valueOf(initWorkTimerHours), 3);
+        workMinutesTextField = new JTextField(String.valueOf(initWorkTimerMinutes), 3);
+        workSecondsTextField = new JTextField(String.valueOf(initWorkTimerSeconds), 3);
 
         // Row layout: Hours, Minutes, Seconds horizontally
         gbc.gridx = 0;
@@ -139,9 +161,9 @@ public class SetTimerDialog extends JDialog {
         minutesLabel = new JLabel("Minutes:");
         secondsLabel = new JLabel("Seconds:");
 
-        breakHoursTextField = new JTextField(3);
-        breakMinutesTextField = new JTextField(3);
-        breakSecondsTextField = new JTextField(3);
+        breakHoursTextField = new JTextField(String.valueOf(initBreakTimerHours), 3);
+        breakMinutesTextField = new JTextField(String.valueOf(initBreakTimerMinutes), 3);
+        breakSecondsTextField = new JTextField(String.valueOf(initBreakTimerSeconds), 3);
 
         // Row layout: Hours, Minutes, Seconds horizontally
         gbc.gridx = 0;

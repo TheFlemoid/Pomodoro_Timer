@@ -4,8 +4,9 @@
  * Created:   25 October, 2025
  * Copyright: 2025 (c) Franklyn Dahlberg
  */ 
-package com.tdberg.timer;
+package com.tdberg.timer.alarm;
 
+import com.tdberg.timer.enums.AlarmTone;
 import org.freedesktop.gstreamer.Gst;
 import org.freedesktop.gstreamer.Pipeline;
 

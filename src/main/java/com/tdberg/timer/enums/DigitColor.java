@@ -4,7 +4,7 @@
  * Created:   25 October, 2025
  * Copyright: 2025 (c) Franklyn Dahlberg
  */ 
-package com.tdberg.timer;
+package com.tdberg.timer.enums;
 
 /**
  * Enum detailing all color options for timer digits

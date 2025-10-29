@@ -6,10 +6,13 @@
  */ 
 package com.tdberg.timer;
 
+import com.tdberg.timer.alarm.AlarmPlayer;
 import com.tdberg.timer.dialogs.SetTimerDialog;
+import com.tdberg.timer.enums.AlarmTone;
+import com.tdberg.timer.enums.DigitColor;
+import com.tdberg.timer.enums.TimerType;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ButtonGroup;
@@ -203,8 +206,7 @@ public class PomoTimer extends JFrame implements ActionListener {
 
         switch(action) {
             case "Set Time":
-                //showSetTimerDialog();
-                setTimerDialog = new SetTimerDialog(this);
+                setTimerDialog = new SetTimerDialog(this, workTimeSeconds, breakTimeSeconds);
                 setTimerDialog.setVisible(true);
                 break;
             case "About":
@@ -359,24 +361,6 @@ public class PomoTimer extends JFrame implements ActionListener {
         setVolumeDialog.setResizable(false);
         setVolumeDialog.setVisible(true);
     }
-
-    //private void showSetTimerDialog() {
-    //    final int setTimerDialogWidth = 440;
-    //    final int setTimerDialogHeight = 500;
-
-    //    setTimerDialog = new JDialog(this, "Set Timer");
-    //    setTimerDialog.setLocationRelativeTo(null);
-    //    setTimerDialog.setLayout(new GridLayout(2, 4));
-    //
-    //    JLabel timerTimeLabel = new JLabel("<html><u><h3>Work / Timer Time:");
-    //    JLabel breakTimeLabel = new JLabel("<html><u><h3>Break Time:");
-    //    setTimerDialog.add(timerTimeLabel);
-    //    setTimerDialog.add(breakTimeLabel);
-
-    //    setTimerDialog.setSize(setTimerDialogWidth, setTimerDialogHeight);
-    //    setTimerDialog.setResizable(false);
-    //    setTimerDialog.setVisible(true);
-    //}
 
     /**
      * Returns the digit JPanel for this runtime

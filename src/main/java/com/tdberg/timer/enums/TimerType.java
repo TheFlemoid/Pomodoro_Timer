@@ -4,7 +4,7 @@
  * Created:   28 October, 2025
  * Copyright: 2025 (c) Franklyn Dahlberg
  */ 
-package com.tdberg.timer;
+package com.tdberg.timer.enums;
 
 /**
  * Enum detailing the timer types (normal timer vs pomodoro timer)
