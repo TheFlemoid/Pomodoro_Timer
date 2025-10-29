@@ -35,8 +35,12 @@ For requirements, this requires GStreamer to be installed, and at least Java 21.
 
 This offers multiple alert tones, volume settings, setting of work/rest timer lengths, multiple font colors, and more!  I made this whole thing in a day or two, basically just cause I thought it'd be fun to spin my own implementation of tools that I found useful.  If you want more features, feel free to file a PR, or ask and I may just go ahead and implement them myself.
 
-![blue_color_font.png](resources/blue_color_font.png)
+<p align="center">
+    <img src="resources/blue_color_font.png" />
+</p>
 
-![set_time_interface.png](resources/set_time_interface.png)
+<p align="center">
+    <img src="resources/set_time_interface.png" />
+</p>
 
 I'm actually kind proud of this one, since I've found it to be useful and cause I did it in a weekend where I was forced to sit around for awhile.
