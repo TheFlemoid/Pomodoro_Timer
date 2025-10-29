@@ -1,5 +1,5 @@
 /**
- * File:      SetTimerDialog.java
+ * File:      SetVolumeDialog.java
  * Author:    Franklyn Dahlberg
  * Created:   29 October, 2025
  * Copyright: 2025 (c) Franklyn Dahlberg

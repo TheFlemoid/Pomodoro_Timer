@@ -7,6 +7,7 @@
 package com.tdberg.timer;
 
 import com.tdberg.timer.alarm.AlarmPlayer;
+import com.tdberg.timer.dialogs.AboutDialog;
 import com.tdberg.timer.dialogs.SetTimerDialog;
 import com.tdberg.timer.dialogs.SetVolumeDialog;
 import com.tdberg.timer.enums.AlarmTone;
@@ -18,15 +19,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.SwingConstants;
 
 /**
  * Parent object of timer application.  Extends JFrame.
@@ -43,6 +41,7 @@ public class PomoTimer extends JFrame implements ActionListener {
 
     SetTimerDialog setTimerDialog;
     SetVolumeDialog setVolumeDialog;
+    AboutDialog aboutDialog;
 
     BorderLayout borderLayout = new BorderLayout();
     DigitPanel digitPanel = new DigitPanel();
@@ -204,7 +203,7 @@ public class PomoTimer extends JFrame implements ActionListener {
                 setTimerDialog.setVisible(true);
                 break;
             case "About":
-                showAboutDialog();
+                aboutDialog = new AboutDialog(this);
                 break;
             case "Start":
                 startPauseButton.setText("Pause");
@@ -268,8 +267,6 @@ public class PomoTimer extends JFrame implements ActionListener {
             default:
                 break;
         }
-
-        System.out.println(action);
     }
 
     /**
@@ -294,30 +291,6 @@ public class PomoTimer extends JFrame implements ActionListener {
 
         startPauseButton.setText("Start");
         countdownTimer.reset();
-    }
-
-    /**
-     * Displays the 'About' dialog
-     */
-    private void showAboutDialog() {
-        final int aboutDialogWidth = 340;
-        final int aboutDialogHeight = 135;
-
-        JDialog aboutDialog = new JDialog(this, "About");
-        aboutDialog.setLocationRelativeTo(null);
-
-        String aboutString = "<html><b><center><u>Pomodoro Timer v1.0.0</u>" +
-                              "<br>Made By: Franklyn Dahlberg in October, 2025." +
-                              "<br>GitHub: TheFlemoid" +
-                              "<br>License: MIT";
-
-        JLabel aboutLabel = new JLabel(aboutString, SwingConstants.CENTER);
-
-        aboutDialog.add(aboutLabel);
-
-        aboutDialog.setSize(aboutDialogWidth, aboutDialogHeight);
-        aboutDialog.setResizable(false);
-        aboutDialog.setVisible(true);
     }
 
     /**
