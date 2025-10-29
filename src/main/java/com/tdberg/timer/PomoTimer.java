@@ -17,7 +17,9 @@ import com.tdberg.timer.enums.TimerType;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -76,6 +78,12 @@ public class PomoTimer extends JFrame implements ActionListener {
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setLayout(borderLayout);
+
+        URL iconUrl = getClass().getResource("/timer_icon.png");
+        if (iconUrl != null) {
+            ImageIcon icon = new ImageIcon(iconUrl);
+            this.setIconImage(icon.getImage());
+        }
 
         initializeFrameElements();
         countdownTimer.setTimerSetTime(workTimeSeconds);
