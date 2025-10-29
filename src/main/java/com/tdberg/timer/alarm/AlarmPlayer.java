@@ -24,6 +24,7 @@ public class AlarmPlayer {
     AlarmTone activeAlarm = AlarmTone.CLASSIC;
     private String jarPath;
     private String sfxPath;
+    private Pipeline alarmPipeline;
     private float volume = 0.1f;
 
     /**
@@ -67,8 +68,8 @@ public class AlarmPlayer {
 
         String filePath = sfxPath + activeAlarm.getFilename();
         String pipeSpec = String.format(PIPELINE_TEMPLATE, filePath, volumeString);
-        Pipeline pipeline = (Pipeline) Gst.parseLaunch(pipeSpec);
-        pipeline.play();
+        alarmPipeline = (Pipeline) Gst.parseLaunch(pipeSpec);
+        alarmPipeline.play();
     }
 
     /**
