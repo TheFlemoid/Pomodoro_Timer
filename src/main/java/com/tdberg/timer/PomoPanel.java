@@ -23,7 +23,7 @@ public class PomoPanel extends JPanel {
     private static int MINOR_SEP = 10;
     private static int MAJOR_SEP = 50;
 
-    private DigitColor digitColor = DigitColor.RED;
+    private DigitColor digitColor = DigitColor.GREEN;
 
     private int h0Value = 0;
     private int h1Value = 0;

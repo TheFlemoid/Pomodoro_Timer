@@ -33,6 +33,11 @@ public class PomoTimer extends JFrame implements ActionListener {
     private static final int MIN_VOL = 0;
     private static final int MAX_VOL = 100;
 
+    private int workTimeSeconds = 1500;
+    private int breakTimeSeconds = 300;
+    private TimerType timerType = TimerType.POMO;
+    private boolean onBreak = false;
+
     BorderLayout borderLayout = new BorderLayout();
     PomoPanel digitPanel = new PomoPanel();
     JPanel buttonPanel = new JPanel();
@@ -71,6 +76,7 @@ public class PomoTimer extends JFrame implements ActionListener {
         this.setLayout(borderLayout);
 
         initializeFrameElements();
+        countdownTimer.setTimerSetTime(workTimeSeconds);
 
         this.setVisible(true);
     }
@@ -147,7 +153,7 @@ public class PomoTimer extends JFrame implements ActionListener {
         orange = new JRadioButtonMenuItem("Orange");
         pink = new JRadioButtonMenuItem("Pink");
         red = new JRadioButtonMenuItem("Red");
-        red.setSelected(true);
+        green.setSelected(true);
 
         blue.addActionListener(this);
         green.addActionListener(this);
@@ -245,8 +251,18 @@ public class PomoTimer extends JFrame implements ActionListener {
                 digitPanel.setDigitColor(DigitColor.RED);
                 break;
             case "Pomodoro":
+                timerType = TimerType.POMO;
+                countdownTimer.stop();
+                countdownTimer.setTimerSetTime(workTimeSeconds);
+                countdownTimer.reset();
+                startPauseButton.setText("Start");
                 break;
             case "Timer":
+                timerType = TimerType.TIMER;
+                countdownTimer.stop();
+                countdownTimer.setTimerSetTime(workTimeSeconds);
+                countdownTimer.reset();
+                startPauseButton.setText("Start");
                 break;
             case "Exit":
                 System.exit(0);
@@ -266,8 +282,21 @@ public class PomoTimer extends JFrame implements ActionListener {
             alarmPlayer.playAlarm();
         }
 
+        if (timerType == TimerType.POMO) {
+            if (!onBreak) {
+                onBreak = true;
+                countdownTimer.setTimerSetTime(breakTimeSeconds);
+            } else {
+                onBreak = false;
+                countdownTimer.setTimerSetTime(workTimeSeconds);
+            }
+        }else {
+            countdownTimer.setTimerSetTime(workTimeSeconds);
+        }
+
         startPauseButton.setText("Start");
         countdownTimer.reset();
+
     }
 
     /**
