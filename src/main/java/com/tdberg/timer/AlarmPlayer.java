@@ -31,7 +31,7 @@ public class AlarmPlayer {
     AlarmTone activeAlarm = AlarmTone.CLASSIC;
     private String jarPath;
     private String sfxPath;
-    private String volume = "0.2";
+    private float volume = 0.1f;
 
     /**
      * Default constructor
@@ -48,7 +48,15 @@ public class AlarmPlayer {
             // alerts, as the pathing works differently then when it's packaged for dist.
             jarPath = new File(AlarmPlayer.class.getProtectionDomain()
                     .getCodeSource().getLocation().toURI()).getPath();
-            sfxPath = jarPath + "/../../sfx/";
+
+            // Getting the path to the JAR file (lopping off the JAR filename)
+            String[] jarPathArray = jarPath.split("/");
+            jarPath = "";
+            for (int i = 0; i < jarPathArray.length - 1; i++) {
+                jarPath = jarPath + jarPathArray[i] + "/";
+            }
+
+            sfxPath = jarPath + "../sfx/";
         }catch (URISyntaxException e) {
             System.out.println("URISyntaxException when getting JAR path.");
             e.printStackTrace();
@@ -62,30 +70,14 @@ public class AlarmPlayer {
             return;
         }
 
-        String pipeSpec = String.format(PIPELINE_TEMPLATE, activeAlarm.getFilename(), volume);
+        String volumeString = String.format(java.util.Locale.US, "%.2f", volume); 
+        System.out.println(volumeString);
+
+        String filePath = sfxPath + activeAlarm.getFilename();
+        String pipeSpec = String.format(PIPELINE_TEMPLATE, filePath, volumeString);
+        System.out.println(pipeSpec);
         Pipeline pipeline = (Pipeline) Gst.parseLaunch(pipeSpec);
         pipeline.play();
-
-        //Thread alarmThread = new Thread(new Runnable() {
-        //    @Override
-        //    public void run() {
-        //        InputStream inputStream = getClass().getResourceAsStream(activeAlarm.getFilePath());
-
-        //        try {
-        //            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(inputStream);
-        //            Clip audioClip = AudioSystem.getClip();
-        //            audioClip.open(audioInputStream);
-        //            audioClip.setMicrosecondPosition(0);
-        //            audioClip.start();
-        //            Thread.sleep(6000); // Clip start is non-blocking for some silly reason
-        //            audioClip.close();
-        //        }catch (UnsupportedAudioFileException | LineUnavailableException |
-        //                IOException | InterruptedException e) {
-        //            e.printStackTrace();
-        //        }
-        //    }
-        //});
-        //alarmThread.start();
     }
 
     /**
@@ -102,6 +94,14 @@ public class AlarmPlayer {
      */
     public void setActiveAlarm(final AlarmTone activeAlarm) {
         this.activeAlarm = activeAlarm;
+    }
+
+    public float getVolume() {
+        return volume;
+    }
+
+    public void setVolume(final float volume) {
+        this.volume = volume;
     }
 }
 

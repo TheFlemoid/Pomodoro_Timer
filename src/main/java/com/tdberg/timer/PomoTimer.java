@@ -20,6 +20,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 
 /**
@@ -27,8 +28,10 @@ import javax.swing.SwingConstants;
  */
 public class PomoTimer extends JFrame implements ActionListener {
 
-    private static int FRAME_WIDTH = 510;
-    private static int FRAME_HEIGHT = 220;
+    private static final int FRAME_WIDTH = 510;
+    private static final int FRAME_HEIGHT = 220;
+    private static final int MIN_VOL = 0;
+    private static final int MAX_VOL = 100;
 
     BorderLayout borderLayout = new BorderLayout();
     PomoPanel digitPanel = new PomoPanel();
@@ -38,13 +41,16 @@ public class PomoTimer extends JFrame implements ActionListener {
 
     JButton startPauseButton = new JButton("Start");
     JButton resetButton = new JButton("Reset");
+    JButton setVolumeButton = new JButton("Set");
+    JDialog setVolumeDialog;
+    JSlider volumeSlider;
 
     JMenu timerMenu = new JMenu("Timer");
     JMenu colorMenu = new JMenu("Color");
     JMenu modeMenu = new JMenu("Mode");
     JMenu alarmMenu = new JMenu("Alarm");
     JMenuBar menuBar = new JMenuBar();
-    JMenuItem exitItem, setTimeItem, aboutItem;
+    JMenuItem exitItem, setTimeItem, aboutItem, setVolumeItem;
     JRadioButtonMenuItem blue, green, orange, pink, red;
     JRadioButtonMenuItem pomoMode, timerMode;
     JRadioButtonMenuItem classic, rooster, slotMachine, mute;
@@ -79,6 +85,8 @@ public class PomoTimer extends JFrame implements ActionListener {
         // Setup bottom buttons
         startPauseButton.addActionListener(this);
         resetButton.addActionListener(this);
+        setVolumeButton.setActionCommand("set_volume_okay");
+        setVolumeButton.addActionListener(this);
         buttonPanel.add(startPauseButton);
         buttonPanel.add(resetButton);
         this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
@@ -87,9 +95,11 @@ public class PomoTimer extends JFrame implements ActionListener {
         exitItem = new JMenuItem("Exit");
         setTimeItem = new JMenuItem("Set Time");
         aboutItem = new JMenuItem("About");
+        setVolumeItem = new JMenuItem("Set Volume");
         exitItem.addActionListener(this);
         setTimeItem.addActionListener(this);
         aboutItem.addActionListener(this);
+        setVolumeItem.addActionListener(this);
 
         // Setup mode options
         pomoMode = new JRadioButtonMenuItem("Pomodoro");
@@ -128,6 +138,8 @@ public class PomoTimer extends JFrame implements ActionListener {
         alarmMenu.add(rooster);
         alarmMenu.add(slotMachine);
         alarmMenu.add(mute);
+        alarmMenu.addSeparator();
+        alarmMenu.add(setVolumeItem);
 
         // Setup color options
         blue = new JRadioButtonMenuItem("Blue");
@@ -206,6 +218,14 @@ public class PomoTimer extends JFrame implements ActionListener {
             case "Slot Machine":
                 alarmPlayer.setActiveAlarm(AlarmTone.SLOT_MACHINE);
                 break;
+            case "Set Volume":
+                showVolumeDialog();
+                break;
+            case "set_volume_okay":
+                float setValue = volumeSlider.getValue() / 100f;
+                alarmPlayer.setVolume(setValue);
+                setVolumeDialog.hide();
+                break;
             case "Mute":
                 alarmPlayer.setActiveAlarm(AlarmTone.MUTE);
                 break;
@@ -238,6 +258,9 @@ public class PomoTimer extends JFrame implements ActionListener {
         System.out.println(action);
     }
 
+    /**
+     * Called when the timer completes it's countdown to zero
+     */
     public void timerFinished() {
         if (alarmPlayer.getActiveAlarm() != AlarmTone.MUTE) {
             alarmPlayer.playAlarm();
@@ -255,6 +278,7 @@ public class PomoTimer extends JFrame implements ActionListener {
         final int aboutDialogHeight = 130;
 
         JDialog aboutDialog = new JDialog(this, "About");
+        aboutDialog.setLocationRelativeTo(null);
 
         String aboutString = "<html><center>Pomodoro Timer v1.0.0" +
                               "<br>Made by Franklyn Dahlberg in October, 2025." +
@@ -270,6 +294,39 @@ public class PomoTimer extends JFrame implements ActionListener {
         aboutDialog.setVisible(true);
     }
 
+    /**
+     * Shows the "Set Volume" dialog to control the volume of the
+     * alarm tone
+     */
+    private void showVolumeDialog() {
+        final int volumeDialogWidth = 310;
+        final int volumeDialogHeight = 140;
+
+        setVolumeDialog = new JDialog(this, "Set Volume");
+        setVolumeDialog.setLocationRelativeTo(null);
+        setVolumeDialog.setLayout(borderLayout);
+
+        // Volume is stored in the alarm player as a float, as Gstreamer needs this for the volume
+        // plugin, but we'd like to show it as a % to the user.  Hence the conversion here.
+        float currentVolume = alarmPlayer.getVolume() * 100;
+        int volumeInt = Math.round(currentVolume);
+
+        volumeSlider = new JSlider(JSlider.HORIZONTAL, MIN_VOL, MAX_VOL, volumeInt);
+        volumeSlider.setMajorTickSpacing(10);
+        volumeSlider.setPaintTicks(true);
+        volumeSlider.setPaintLabels(true);
+
+        setVolumeDialog.add(volumeSlider, BorderLayout.NORTH);
+        setVolumeDialog.add(setVolumeButton, BorderLayout.SOUTH);
+
+        setVolumeDialog.setSize(volumeDialogWidth, volumeDialogHeight);
+        setVolumeDialog.setResizable(false);
+        setVolumeDialog.setVisible(true);
+    }
+
+    /**
+     * Returns the digit JPanel for this runtime
+     */
     public PomoPanel getDigitPanel() {
         return digitPanel;
     }
