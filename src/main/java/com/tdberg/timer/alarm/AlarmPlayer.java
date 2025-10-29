@@ -64,11 +64,9 @@ public class AlarmPlayer {
         }
 
         String volumeString = String.format(java.util.Locale.US, "%.2f", volume); 
-        System.out.println(volumeString);
 
         String filePath = sfxPath + activeAlarm.getFilename();
         String pipeSpec = String.format(PIPELINE_TEMPLATE, filePath, volumeString);
-        System.out.println(pipeSpec);
         Pipeline pipeline = (Pipeline) Gst.parseLaunch(pipeSpec);
         pipeline.play();
     }

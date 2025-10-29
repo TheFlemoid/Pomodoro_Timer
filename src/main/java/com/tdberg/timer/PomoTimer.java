@@ -307,4 +307,29 @@ public class PomoTimer extends JFrame implements ActionListener {
     public DigitPanel getDigitPanel() {
         return digitPanel;
     }
+
+    /**
+     * Sets the 'work time' timer value and resets the timer
+     *
+     * @param workTimeSeconds time to set for 'work time' in seconds
+     */
+    public void setWorkTimeSeconds(final int workTimeSeconds) {
+        this.workTimeSeconds = workTimeSeconds;
+        countdownTimer.stop();
+        countdownTimer.setTimerSetTime(workTimeSeconds);
+        countdownTimer.reset();
+        startPauseButton.setText("Start");
+    }
+
+    /**
+     * Sets the 'break time' timer value and resets the timer
+     *
+     * @param breakTimeSeconds time to set for 'break time' in seconds
+     */
+    public void setBreakTimeSeconds(final int breakTimeSeconds) {
+        this.breakTimeSeconds = breakTimeSeconds;
+        countdownTimer.stop();
+        countdownTimer.reset();
+        startPauseButton.setText("Start");
+    }
 }
